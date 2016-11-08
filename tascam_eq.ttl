@@ -1,0 +1,275 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix epp: <http://lv2plug.in/ns/ext/port-props#> .
+
+<http://www.paraair.de/plugins/tascam_eq>
+	a lv2:Plugin ,
+		lv2:FunctionPlugin ;
+	lv2:project <http://lv2plug.in/ns/lv2> ;
+	doap:name "EQ - Tascam US-16x08" ;
+	doap:maintainer [
+		foaf:name "Detlef Urban";
+		foaf:mbox <mailto:onkel@paraair.de>;
+    	];
+	doap:license <http://opensource.org/licenses/isc> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+
+	lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 0 ;
+		lv2:symbol "channel" ;
+		lv2:name "Channel" ;
+		lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration;
+                lv2:scalePoint 
+                    [ rdfs:label "1"; rdf:value 0 ] ,
+                    [ rdfs:label "2"; rdf:value 1 ] ,
+                    [ rdfs:label "3"; rdf:value 2 ] ,
+                    [ rdfs:label "4"; rdf:value 3 ] ,
+                    [ rdfs:label "5"; rdf:value 4 ] ,
+                    [ rdfs:label "6"; rdf:value 5 ] ,
+                    [ rdfs:label "7"; rdf:value 6 ] ,
+                    [ rdfs:label "8"; rdf:value 7 ] ,
+                    [ rdfs:label "9"; rdf:value 8 ] ,
+                    [ rdfs:label "10"; rdf:value 9 ] ,
+                    [ rdfs:label "11"; rdf:value 10 ] ,
+                    [ rdfs:label "12"; rdf:value 11 ] ,
+                    [ rdfs:label "13"; rdf:value 12 ] ,
+                    [ rdfs:label "14"; rdf:value 13 ] ,
+                    [ rdfs:label "15"; rdf:value 14 ] ,
+                    [ rdfs:label "16"; rdf:value 15 ];
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 15.0 ;
+        ];
+
+        lv2:port [
+		a lv2:AudioPort ,
+			lv2:InputPort ;
+		lv2:index 1 ;
+		lv2:symbol "in" ;
+		lv2:name "In"
+	];
+
+        lv2:port [
+		a lv2:AudioPort ,
+			lv2:OutputPort ;
+		lv2:index 2 ;
+		lv2:symbol "out" ;
+		lv2:name "Out"
+	] ;
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:symbol "HighFreq" ;
+		lv2:name "High Frequence" ;
+                lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
+                lv2:scalePoint
+                    [ rdfs:label "1.7 kHz"; rdf:value 0 ] , [ rdfs:label "1.8 kHz"; rdf:value 1 ] , [ rdfs:label "1.9 kHz"; rdf:value 2 ] ,
+                    [ rdfs:label "2.0 kHz"; rdf:value 3 ] , [ rdfs:label "2.2 kHz"; rdf:value 4 ] , [ rdfs:label "2.4 kHz"; rdf:value 5 ] ,
+                    [ rdfs:label "2.6 kHz"; rdf:value 6 ] , [ rdfs:label "2.8 kHz"; rdf:value 7 ] , [ rdfs:label "3.0 kHz"; rdf:value 8 ] ,
+                    [ rdfs:label "3.2 kHz"; rdf:value 9 ] , [ rdfs:label "3.4 kHz"; rdf:value  10 ] , [ rdfs:label "3.6 kHz"; rdf:value  11 ] ,
+                    [ rdfs:label "3.8 kHz"; rdf:value  12 ] , [ rdfs:label "4.0 kHz"; rdf:value  13 ] , [ rdfs:label "4.5 kHz"; rdf:value  14 ] ,
+                    [ rdfs:label "5.0 kHz"; rdf:value  15 ] , [ rdfs:label "5.5 kHz"; rdf:value  16 ] , [ rdfs:label "6.0 kHz"; rdf:value  17 ] ,
+                    [ rdfs:label "6.5 kHz"; rdf:value  18 ] , [ rdfs:label "7.0 kHz"; rdf:value  19 ] , [ rdfs:label "7.5 kHz"; rdf:value  20 ] ,
+                    [ rdfs:label "8.0 kHz"; rdf:value  21 ] , [ rdfs:label "9.0 kHz"; rdf:value  22 ] , [ rdfs:label "10 kHz"; rdf:value  23 ] ,
+                    [ rdfs:label "11 kHz"; rdf:value  24 ] , [ rdfs:label "12 kHz"; rdf:value  25 ] , [ rdfs:label "13 kHz"; rdf:value  26 ] ,
+                    [ rdfs:label "14 kHz"; rdf:value  27 ] , [ rdfs:label "15 kHz"; rdf:value  28 ] , [ rdfs:label "16 kHz"; rdf:value  29 ] ,
+                    [ rdfs:label "17 kHz"; rdf:value  30 ] , [ rdfs:label "18 kHz"; rdf:value  31 ];
+		lv2:default 5.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 31.0 ; 
+	];
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:symbol "HighLevel" ;
+		lv2:name "High Level" ;
+                lv2:portProperty lv2:float;
+		lv2:default 0.0 ;
+		lv2:minimum -12.0 ;
+		lv2:maximum 12.0 ; 
+                units:unit   units:db
+        ] ;
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 5 ;
+		lv2:symbol "MidHighFreq" ;
+		lv2:name "Mid High Frequence" ;
+                lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
+                lv2:scalePoint
+                    [ rdfs:label "32 Hz"; rdf:value 0 ] , [ rdfs:label "40 Hz"; rdf:value 1 ] , [ rdfs:label "50 Hz"; rdf:value 2 ] ,
+                    [ rdfs:label "60 Hz"; rdf:value 3 ] , [ rdfs:label "70 Hz"; rdf:value 4 ] , [ rdfs:label "80 Hz"; rdf:value 5 ] ,
+                    [ rdfs:label "90 Hz"; rdf:value 6 ] , [ rdfs:label "100 Hz"; rdf:value 7 ] , [ rdfs:label "125 Hz"; rdf:value 8 ] ,
+                    [ rdfs:label "150 Hz"; rdf:value 9 ] , [ rdfs:label "175 Hz"; rdf:value  10 ] , [ rdfs:label "200 Hz"; rdf:value  11 ] ,
+                    [ rdfs:label "225 Hz"; rdf:value  12 ] , [ rdfs:label "250 Hz"; rdf:value  13 ] , [ rdfs:label "300 Hz"; rdf:value  14 ] ,
+                    [ rdfs:label "350 Hz"; rdf:value  15 ] , [ rdfs:label "400 Hz"; rdf:value  16 ] , [ rdfs:label "450 Hz"; rdf:value  17 ] ,
+                    [ rdfs:label "500 Hz"; rdf:value  18 ] , [ rdfs:label "600 Hz"; rdf:value  19 ] , [ rdfs:label "700 Hz"; rdf:value  20 ] ,
+                    [ rdfs:label "800 Hz"; rdf:value  21 ] , [ rdfs:label "850 Hz"; rdf:value  22 ] , [ rdfs:label "900 Hz"; rdf:value  23 ] ,
+                    [ rdfs:label "950 Hz"; rdf:value  24 ] , [ rdfs:label "1.0 kHz"; rdf:value  25 ] , [ rdfs:label "1.1 kHz"; rdf:value  26 ] ,
+                    [ rdfs:label "1.2 kHz"; rdf:value  27 ] , [ rdfs:label "1.3 kHz"; rdf:value  28 ] , [ rdfs:label "1.4 kHz"; rdf:value  29 ] ,
+                    [ rdfs:label "1.5 kHz"; rdf:value  30 ] , [ rdfs:label "1.6 kHz"; rdf:value  31 ] ,
+                    [ rdfs:label "1.7 kHz"; rdf:value 32 ] , [ rdfs:label "1.8 kHz"; rdf:value 33 ] , [ rdfs:label "1.9 kHz"; rdf:value 34 ] ,
+                    [ rdfs:label "2.0 kHz"; rdf:value 35 ] , [ rdfs:label "2.2 kHz"; rdf:value 36 ] , [ rdfs:label "2.4 kHz"; rdf:value 37 ] ,
+                    [ rdfs:label "2.6 kHz"; rdf:value 38 ] , [ rdfs:label "2.8 kHz"; rdf:value 39 ] , [ rdfs:label "3.0 kHz"; rdf:value 40 ] ,
+                    [ rdfs:label "3.2 kHz"; rdf:value 41 ] , [ rdfs:label "3.4 kHz"; rdf:value  42 ] , [ rdfs:label "3.6 kHz"; rdf:value  43 ] ,
+                    [ rdfs:label "3.8 kHz"; rdf:value  44 ] , [ rdfs:label "4.0 kHz"; rdf:value  45 ] , [ rdfs:label "4.5 kHz"; rdf:value  46 ] ,
+                    [ rdfs:label "5.0 kHz"; rdf:value  47 ] , [ rdfs:label "5.5 kHz"; rdf:value  48 ] , [ rdfs:label "6.0 kHz"; rdf:value  49 ] ,
+                    [ rdfs:label "6.5 kHz"; rdf:value  50 ] , [ rdfs:label "7.0 kHz"; rdf:value  51 ] , [ rdfs:label "7.5 kHz"; rdf:value  52 ] ,
+                    [ rdfs:label "8.0 kHz"; rdf:value  53 ] , [ rdfs:label "9.0 kHz"; rdf:value  54 ] , [ rdfs:label "10 kHz"; rdf:value  55 ] ,
+                    [ rdfs:label "11 kHz"; rdf:value  56 ] , [ rdfs:label "12 kHz"; rdf:value  57 ] , [ rdfs:label "13 kHz"; rdf:value  58 ] ,
+                    [ rdfs:label "14 kHz"; rdf:value  59 ] , [ rdfs:label "15 kHz"; rdf:value  60 ] , [ rdfs:label "16 kHz"; rdf:value  61 ] ,
+                    [ rdfs:label "17 kHz"; rdf:value  62 ] , [ rdfs:label "18 kHz"; rdf:value  63 ] ;
+		lv2:default 27.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 63.0 ; 
+	];
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 6 ;
+		lv2:symbol "MidHighQ" ;
+		lv2:name "Mid High Q" ;
+                lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
+                lv2:scalePoint
+                    [ rdfs:label "0.25"; rdf:value 0 ],
+                    [ rdfs:label "0.50"; rdf:value 1 ],
+                    [ rdfs:label "1.00"; rdf:value 2 ],
+                    [ rdfs:label "2.00"; rdf:value 3 ],
+                    [ rdfs:label "4.00"; rdf:value 4 ],
+                    [ rdfs:label "8.00"; rdf:value 5 ],
+                    [ rdfs:label "16.00"; rdf:value 6 ];
+		lv2:default 2.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 6.0 ; 
+	] ;
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 7 ;
+		lv2:symbol "MidHighLevel" ;
+		lv2:name "Mid High Level" ;
+                lv2:portProperty lv2:float;
+		lv2:default 0.0 ;
+		lv2:minimum -12.0 ;
+		lv2:maximum 12.0 ; 
+                units:unit   units:db
+        ] ;
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 8 ;
+		lv2:symbol "MidLowFreq" ;
+		lv2:name "Mid Low Frequence" ;
+                lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
+                lv2:scalePoint
+                    [ rdfs:label "32 Hz"; rdf:value 0 ] , [ rdfs:label "40 Hz"; rdf:value 1 ] , [ rdfs:label "50 Hz"; rdf:value 2 ] ,
+                    [ rdfs:label "60 Hz"; rdf:value 3 ] , [ rdfs:label "70 Hz"; rdf:value 4 ] , [ rdfs:label "80 Hz"; rdf:value 5 ] ,
+                    [ rdfs:label "90 Hz"; rdf:value 6 ] , [ rdfs:label "100 Hz"; rdf:value 7 ] , [ rdfs:label "125 Hz"; rdf:value 8 ] ,
+                    [ rdfs:label "150 Hz"; rdf:value 9 ] , [ rdfs:label "175 Hz"; rdf:value  10 ] , [ rdfs:label "200 Hz"; rdf:value  11 ] ,
+                    [ rdfs:label "225 Hz"; rdf:value  12 ] , [ rdfs:label "250 Hz"; rdf:value  13 ] , [ rdfs:label "300 Hz"; rdf:value  14 ] ,
+                    [ rdfs:label "350 Hz"; rdf:value  15 ] , [ rdfs:label "400 Hz"; rdf:value  16 ] , [ rdfs:label "450 Hz"; rdf:value  17 ] ,
+                    [ rdfs:label "500 Hz"; rdf:value  18 ] , [ rdfs:label "600 Hz"; rdf:value  19 ] , [ rdfs:label "700 Hz"; rdf:value  20 ] ,
+                    [ rdfs:label "800 Hz"; rdf:value  21 ] , [ rdfs:label "850 Hz"; rdf:value  22 ] , [ rdfs:label "900 Hz"; rdf:value  23 ] ,
+                    [ rdfs:label "950 Hz"; rdf:value  24 ] , [ rdfs:label "1.0 kHz"; rdf:value  25 ] , [ rdfs:label "1.1 kHz"; rdf:value  26 ] ,
+                    [ rdfs:label "1.2 kHz"; rdf:value  27 ] , [ rdfs:label "1.3 kHz"; rdf:value  28 ] , [ rdfs:label "1.4 kHz"; rdf:value  29 ] ,
+                    [ rdfs:label "1.5 kHz"; rdf:value  30 ] , [ rdfs:label "1.6 kHz"; rdf:value  31 ] ,
+                    [ rdfs:label "1.7 kHz"; rdf:value 32 ] , [ rdfs:label "1.8 kHz"; rdf:value 33 ] , [ rdfs:label "1.9 kHz"; rdf:value 34 ] ,
+                    [ rdfs:label "2.0 kHz"; rdf:value 35 ] , [ rdfs:label "2.2 kHz"; rdf:value 36 ] , [ rdfs:label "2.4 kHz"; rdf:value 37 ] ,
+                    [ rdfs:label "2.6 kHz"; rdf:value 38 ] , [ rdfs:label "2.8 kHz"; rdf:value 39 ] , [ rdfs:label "3.0 kHz"; rdf:value 40 ] ,
+                    [ rdfs:label "3.2 kHz"; rdf:value 41 ] , [ rdfs:label "3.4 kHz"; rdf:value  42 ] , [ rdfs:label "3.6 kHz"; rdf:value  43 ] ,
+                    [ rdfs:label "3.8 kHz"; rdf:value  44 ] , [ rdfs:label "4.0 kHz"; rdf:value  45 ] , [ rdfs:label "4.5 kHz"; rdf:value  46 ] ,
+                    [ rdfs:label "5.0 kHz"; rdf:value  47 ] , [ rdfs:label "5.5 kHz"; rdf:value  48 ] , [ rdfs:label "6.0 kHz"; rdf:value  49 ] ,
+                    [ rdfs:label "6.5 kHz"; rdf:value  50 ] , [ rdfs:label "7.0 kHz"; rdf:value  51 ] , [ rdfs:label "7.5 kHz"; rdf:value  52 ] ,
+                    [ rdfs:label "8.0 kHz"; rdf:value  53 ] , [ rdfs:label "9.0 kHz"; rdf:value  54 ] , [ rdfs:label "10 kHz"; rdf:value  55 ] ,
+                    [ rdfs:label "11 kHz"; rdf:value  56 ] , [ rdfs:label "12 kHz"; rdf:value  57 ] , [ rdfs:label "13 kHz"; rdf:value  58 ] ,
+                    [ rdfs:label "14 kHz"; rdf:value  59 ] , [ rdfs:label "15 kHz"; rdf:value  60 ] , [ rdfs:label "16 kHz"; rdf:value  61 ] ,
+                    [ rdfs:label "17 kHz"; rdf:value  62 ] , [ rdfs:label "18 kHz"; rdf:value  63 ] ;
+		lv2:default 14.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 63.0 ; 
+	];
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 9 ;
+		lv2:symbol "MidLowQ" ;
+		lv2:name "Mid Low Q" ;
+                lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
+                lv2:scalePoint
+                    [ rdfs:label "0.25"; rdf:value 0 ],
+                    [ rdfs:label "0.50"; rdf:value 1 ],
+                    [ rdfs:label "1.00"; rdf:value 2 ],
+                    [ rdfs:label "2.00"; rdf:value 3 ],
+                    [ rdfs:label "4.00"; rdf:value 4 ],
+                    [ rdfs:label "8.00"; rdf:value 5 ],
+                    [ rdfs:label "16.00"; rdf:value 6 ];
+		lv2:default 2.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 6.0 ; 
+	] ;
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 10 ;
+		lv2:symbol "MidLowLevel" ;
+		lv2:name "Mid Low Level" ;
+                lv2:portProperty lv2:float;
+		lv2:default 0.0 ;
+		lv2:minimum -12.0 ;
+		lv2:maximum 12.0 ; 
+                units:unit   units:db
+        ] ;
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 11 ;
+		lv2:symbol "LowFreq" ;
+		lv2:name "Low Frequence" ;
+                lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
+                lv2:scalePoint
+                    [ rdfs:label "32 Hz"; rdf:value 0 ] , [ rdfs:label "40 Hz"; rdf:value 1 ] , [ rdfs:label "50 Hz"; rdf:value 2 ] ,
+                    [ rdfs:label "60 Hz"; rdf:value 3 ] , [ rdfs:label "70 Hz"; rdf:value 4 ] , [ rdfs:label "80 Hz"; rdf:value 5 ] ,
+                    [ rdfs:label "90 Hz"; rdf:value 6 ] , [ rdfs:label "100 Hz"; rdf:value 7 ] , [ rdfs:label "125 Hz"; rdf:value 8 ] ,
+                    [ rdfs:label "150 Hz"; rdf:value 9 ] , [ rdfs:label "175 Hz"; rdf:value  10 ] , [ rdfs:label "200 Hz"; rdf:value  11 ] ,
+                    [ rdfs:label "225 Hz"; rdf:value  12 ] , [ rdfs:label "250 Hz"; rdf:value  13 ] , [ rdfs:label "300 Hz"; rdf:value  14 ] ,
+                    [ rdfs:label "350 Hz"; rdf:value  15 ] , [ rdfs:label "400 Hz"; rdf:value  16 ] , [ rdfs:label "450 Hz"; rdf:value  17 ] ,
+                    [ rdfs:label "500 Hz"; rdf:value  18 ] , [ rdfs:label "600 Hz"; rdf:value  19 ] , [ rdfs:label "700 Hz"; rdf:value  20 ] ,
+                    [ rdfs:label "800 Hz"; rdf:value  21 ] , [ rdfs:label "850 Hz"; rdf:value  22 ] , [ rdfs:label "900 Hz"; rdf:value  23 ] ,
+                    [ rdfs:label "950 Hz"; rdf:value  24 ] , [ rdfs:label "1.0 kHz"; rdf:value  25 ] , [ rdfs:label "1.1 kHz"; rdf:value  26 ] ,
+                    [ rdfs:label "1.2 kHz"; rdf:value  27 ] , [ rdfs:label "1.3 kHz"; rdf:value  28 ] , [ rdfs:label "1.4 kHz"; rdf:value  29 ] ,
+                    [ rdfs:label "1.5 kHz"; rdf:value  30 ] , [ rdfs:label "1.6 kHz"; rdf:value  31 ];
+		lv2:default 5.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 31.0 ; 
+	];
+
+        lv2:port [
+		a lv2:InputPort , lv2:ControlPort ;
+		lv2:index 12 ;
+		lv2:symbol "LowLevel" ;
+		lv2:name "Low Level" ;
+                lv2:portProperty lv2:float;
+		lv2:default 0.0 ;
+		lv2:minimum -12.0 ;
+		lv2:maximum 12.0 ; 
+                units:unit   units:db
+        ] ;
+
+        lv2:port [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 13 ;
+                lv2:symbol "enable" ;
+                lv2:name "EQ enabled" ;
+                lv2:portProperty lv2:toggled ;
+                lv2:default 0.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+            ]
+.

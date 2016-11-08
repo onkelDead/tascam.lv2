@@ -1,0 +1,10 @@
+Waf: Entering directory `/home/onkel/Projects/tascam.lv2/build'
+[1/7] Compiling manifest.ttl.in
+[2/7] Compiling tascam_comp.ttl
+[3/7] Compiling tascam_eq.ttl
+[4/7] Compiling tascam.c
+[5/7] Compiling tascam_eq.c
+[6/7] Compiling tascam_comp.c
+[7/7] Linking build/tascam.lv2/tascam.so
+Waf: Leaving directory `/home/onkel/Projects/tascam.lv2/build'
+'build' finished successfully (0.074s)
