@@ -36,7 +36,7 @@ typedef enum {
 	TASCAM_CHANNEL   = 0,
 	TASCAM_INPUT  = 1,
 	TASCAM_OUTPUT = 2
-} PortIndex;
+} PortIndex_comp;
 
 typedef struct {
 	// Port buffers
@@ -63,7 +63,7 @@ connect_port_comp(LV2_Handle instance,
 {
 	Tascam* tascam = (Tascam*)instance;
 
-	switch ((PortIndex)port) {
+	switch ((PortIndex_comp)port) {
 	case TASCAM_CHANNEL:
 		tascam->channel = (const float*)data;
 		break;

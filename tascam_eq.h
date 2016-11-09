@@ -10,6 +10,43 @@
 
 #define TASCAM_EQ_URI "http://www.paraair.de/plugins/tascam_eq"
 
+
+typedef enum {
+    TASCAM_EQ_CHANNEL,
+    TASCAM_EQ_INPUT,
+    TASCAM_EQ_OUTPUT,
+    TASCAM_EQ_HIGH_FREQ,
+    TASCAM_EQ_HIGH_LEVEL,
+    TASCAM_EQ_MIDHIGH_FREQ,
+    TASCAM_EQ_MIDHIGH_Q,
+    TASCAM_EQ_MIDHIGH_LEVEL,
+    TASCAM_EQ_MIDLOW_FREQ,
+    TASCAM_EQ_MIDLOW_Q,
+    TASCAM_EQ_MIDLOW_LEVEL,
+    TASCAM_EQ_LOWFREQ,
+    TASCAM_EQ_LOWLEVEL,
+    TASCAM_EQ_ENABLE
+} PortIndex_eq;
+
+typedef struct {
+    // Port buffers
+    const float* channel;
+    const float* highfreq;
+    const float* highlevel;
+    const float* midhighfreq;
+    const float* midhighq;
+    const float* midhighlevel;
+    const float* midlowfreq;
+    const float* midlowq;
+    const float* midlowlevel;
+    const float* lowfreq;
+    const float* lowlevel;
+    const float* enable;
+    const float* input;
+    float* output;
+    void* cache;
+} Tascam_eq;
+
 extern LV2_Handle 
 instantiate_eq(const LV2_Descriptor*     descriptor,
             double                    rate,

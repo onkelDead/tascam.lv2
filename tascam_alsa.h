@@ -16,9 +16,21 @@
 
 #include <alsa/asoundlib.h>
 
+#include <pthread.h>
+#include <unistd.h>
+#include <mqueue.h>
+
+
 extern int cardnum;
 
 int get_alsa_cardnum();
+int open_device();
+void close_device();
+void setInteger(const char* name, int channel, int value);
+int getInteger(const char* name);
+
+snd_hctl_elem_t* get_ctrl_elem(const char* name, int index);
+void setElemInteger(snd_hctl_elem_t *elem, int value);
 
 #endif /* TASCAM_ALSA_H */
 
