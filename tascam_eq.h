@@ -10,7 +10,6 @@
 
 #define TASCAM_EQ_URI "http://www.paraair.de/plugins/tascam_eq"
 
-
 typedef enum {
     TASCAM_EQ_CHANNEL,
     TASCAM_EQ_INPUT,

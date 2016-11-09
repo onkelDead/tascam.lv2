@@ -16,7 +16,6 @@
 
 #define NUM_CHANNELS 16
 
-
 #include "tascam_eq.h"
 #include "tascam_comp.h"
 #include "tascam_alsa.h"

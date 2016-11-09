@@ -20,7 +20,6 @@
 #include <unistd.h>
 #include <mqueue.h>
 
-
 extern int cardnum;
 
 int get_alsa_cardnum();

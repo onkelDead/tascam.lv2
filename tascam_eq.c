@@ -24,8 +24,6 @@
 
 #define TASCAM_URI "http://www.paraair.de/plugins/tascam_eq"
 
-#define DEBUG
-
 typedef struct {
     int channel;
     

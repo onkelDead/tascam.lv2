@@ -82,8 +82,6 @@ next_card:
     return cardnum;
 }
 
-
-
 int open_device() {
     int err = 0;
     char name[32];
