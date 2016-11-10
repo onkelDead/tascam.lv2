@@ -25,6 +25,7 @@
 		lv2:name "Channel" ;
 		lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration;
                 lv2:scalePoint 
+                    [ rdfs:label "no channel"; rdf:value -1 ] ,
                     [ rdfs:label "1"; rdf:value 0 ] ,
                     [ rdfs:label "2"; rdf:value 1 ] ,
                     [ rdfs:label "3"; rdf:value 2 ] ,
@@ -41,30 +42,39 @@
                     [ rdfs:label "14"; rdf:value 13 ] ,
                     [ rdfs:label "15"; rdf:value 14 ] ,
                     [ rdfs:label "16"; rdf:value 15 ];
-		lv2:default 0.0 ;
-		lv2:minimum 0.0 ;
+		lv2:default -1.0 ;
+		lv2:minimum -1.0 ;
 		lv2:maximum 15.0 ;
         ];
 
         lv2:port [
-		a lv2:AudioPort ,
-			lv2:InputPort ;
+		a lv2:AudioPort , lv2:InputPort ;
 		lv2:index 1 ;
 		lv2:symbol "in" ;
 		lv2:name "In"
 	];
 
         lv2:port [
-		a lv2:AudioPort ,
-			lv2:OutputPort ;
+		a lv2:AudioPort ,lv2:OutputPort ;
 		lv2:index 2 ;
 		lv2:symbol "out" ;
 		lv2:name "Out"
 	] ;
 
         lv2:port [
+                a lv2:InputPort, lv2:ControlPort ;
+                lv2:index 3 ;
+                lv2:symbol "enable" ;
+                lv2:name "EQ enabled" ;
+                lv2:portProperty lv2:toggled ;
+                lv2:default 1.0 ;
+                lv2:minimum 0.0 ;
+                lv2:maximum 1.0 ;
+         ] ;
+
+        lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 3 ;
+		lv2:index 4 ;
 		lv2:symbol "HighFreq" ;
 		lv2:name "High Frequence" ;
                 lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
@@ -87,7 +97,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 4 ;
+		lv2:index 5 ;
 		lv2:symbol "HighLevel" ;
 		lv2:name "High Level" ;
                 lv2:portProperty lv2:float;
@@ -99,7 +109,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 5 ;
+		lv2:index 6 ;
 		lv2:symbol "MidHighFreq" ;
 		lv2:name "Mid High Frequence" ;
                 lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
@@ -133,7 +143,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 6 ;
+		lv2:index 7 ;
 		lv2:symbol "MidHighQ" ;
 		lv2:name "Mid High Q" ;
                 lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
@@ -152,7 +162,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 7 ;
+		lv2:index 8 ;
 		lv2:symbol "MidHighLevel" ;
 		lv2:name "Mid High Level" ;
                 lv2:portProperty lv2:float;
@@ -164,7 +174,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 8 ;
+		lv2:index 9 ;
 		lv2:symbol "MidLowFreq" ;
 		lv2:name "Mid Low Frequence" ;
                 lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
@@ -198,7 +208,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 9 ;
+		lv2:index 10 ;
 		lv2:symbol "MidLowQ" ;
 		lv2:name "Mid Low Q" ;
                 lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
@@ -217,7 +227,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 10 ;
+		lv2:index 11 ;
 		lv2:symbol "MidLowLevel" ;
 		lv2:name "Mid Low Level" ;
                 lv2:portProperty lv2:float;
@@ -229,7 +239,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 11 ;
+		lv2:index 12 ;
 		lv2:symbol "LowFreq" ;
 		lv2:name "Low Frequence" ;
                 lv2:portProperty epp:hasStrictBounds , lv2:integer , lv2:enumeration ;
@@ -252,7 +262,7 @@
 
         lv2:port [
 		a lv2:InputPort , lv2:ControlPort ;
-		lv2:index 12 ;
+		lv2:index 13 ;
 		lv2:symbol "LowLevel" ;
 		lv2:name "Low Level" ;
                 lv2:portProperty lv2:float;
@@ -260,16 +270,15 @@
 		lv2:minimum -12.0 ;
 		lv2:maximum 12.0 ; 
                 units:unit   units:db
-        ] ;
-
+        ] ; 
         lv2:port [
-                a lv2:InputPort, lv2:ControlPort ;
-                lv2:index 13 ;
-                lv2:symbol "enable" ;
-                lv2:name "EQ enabled" ;
-                lv2:portProperty lv2:toggled ;
-                lv2:default 0.0 ;
-                lv2:minimum 0.0 ;
-                lv2:maximum 1.0 ;
-            ]
-.
+            a lv2:OutputPort ;
+            a lv2:ControlPort ;
+            lv2:index 14 ;
+            lv2:symbol "input_level" ;
+            lv2:name "Input level" ;
+            lv2:portProperty epp:hasStrictBounds ;
+            lv2:portProperty lv2:connectionOptional ;
+            lv2:minimum 0.00000 ;
+            lv2:maximum 1.00000 ;
+        ] .

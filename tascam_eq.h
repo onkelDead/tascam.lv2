@@ -1,19 +1,78 @@
+/*
+  Copyright 2006-2016 Detlef Urban <onkel@paraair.de>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
 #ifndef TASCAM_EQ_H
 #define TASCAM_EQ_H
 
 #include <math.h>
 #include <stdlib.h>
-
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
 #include "tascam.h"
 
 #define TASCAM_EQ_URI "http://www.paraair.de/plugins/tascam_eq"
 
+typedef struct {
+    int channel;
+    
+    int highfreq;
+    char *highfreq_name;
+    snd_hctl_elem_t* highfreq_elem[16];
+    int highlevel;
+    char *highlevel_name;
+    snd_hctl_elem_t* highlevel_elem[16];
+    
+    int midhighfreq;
+    char *midhighfreq_name;
+    snd_hctl_elem_t* midhighfreq_elem[16];
+    int midhighq;
+    char *midhighq_name;
+    snd_hctl_elem_t* midhighq_elem[16];
+    int midhighlevel;
+    char *midhighlevel_name;
+    snd_hctl_elem_t* midhighlevel_elem[16];
+    
+    int midlowfreq;
+    char *midlowfreq_name;
+    snd_hctl_elem_t* midlowfreq_elem[16];
+    int midlowq;
+    char *midlowq_name;
+    snd_hctl_elem_t* midlowq_elem[16];
+    int midlowlevel;
+    char *midlowlevel_name;
+    snd_hctl_elem_t* midlowlevel_elem[16];
+    
+    int lowfreq;
+    char *lowfreq_name;
+    snd_hctl_elem_t* lowfreq_elem[16];
+    int lowlevel;
+    char *lowlevel_name;
+    snd_hctl_elem_t* lowlevel_elem[16];
+    
+    int enable;
+    char *enable_name;
+    snd_hctl_elem_t* enable_elem[16];
+    
+} tascam_eq_cache;
+
 typedef enum {
     TASCAM_EQ_CHANNEL,
     TASCAM_EQ_INPUT,
     TASCAM_EQ_OUTPUT,
+    TASCAM_EQ_ENABLE,
     TASCAM_EQ_HIGH_FREQ,
     TASCAM_EQ_HIGH_LEVEL,
     TASCAM_EQ_MIDHIGH_FREQ,
@@ -24,7 +83,7 @@ typedef enum {
     TASCAM_EQ_MIDLOW_LEVEL,
     TASCAM_EQ_LOWFREQ,
     TASCAM_EQ_LOWLEVEL,
-    TASCAM_EQ_ENABLE
+    TASCAM_EQ_INPUT_LEVEL
 } PortIndex_eq;
 
 typedef struct {
@@ -41,10 +100,11 @@ typedef struct {
     const float* lowfreq;
     const float* lowlevel;
     const float* enable;
+    float* input_level;
     const float* input;
     float* output;
-    void* cache;
-} Tascam_eq;
+    tascam_eq_cache* cache;
+} Tascam_eq_ports;
 
 extern LV2_Handle 
 instantiate_eq(const LV2_Descriptor*     descriptor,
