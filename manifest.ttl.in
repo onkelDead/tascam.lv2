@@ -28,6 +28,11 @@
 	lv2:binary <tascam@LIB_EXT@>  ;
 	rdfs:seeAlso <tascam_eq.ttl> .
 
+<http://www.paraair.de/plugins/tascam_eq_stereo>
+	a lv2:Plugin ;
+	lv2:binary <tascam@LIB_EXT@>  ;
+	rdfs:seeAlso <tascam_eq_stereo.ttl> .
+
 <http://www.paraair.de/plugins/tascam_comp>
 	a lv2:Plugin ;
 	lv2:binary <tascam@LIB_EXT@>  ;

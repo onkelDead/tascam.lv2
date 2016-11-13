@@ -20,7 +20,7 @@ def configure(conf):
     conf.load('compiler_c')
     conf.load('lv2')
     autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
+    # autowaf.set_c99_mode(conf)
     autowaf.display_header('Tascam Configuration')
 
     if not autowaf.is_child():
@@ -48,7 +48,7 @@ def build(bld):
         LIB_EXT      = module_ext)
 
     # Copy other data files to build bundle (build/eg-amp.lv2)
-    for i in ['tascam_comp.ttl tascam_eq.ttl']:
+    for i in ['tascam_comp.ttl tascam_eq.ttl tascam_eq_stereo.ttl']:
         bld(features     = 'subst',
             is_copy      = True,
             source       = i,
@@ -62,7 +62,7 @@ def build(bld):
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',
-              source       = 'tascam.c tascam_eq.c tascam_comp.c tascam_alsa.c',
+              source       = 'tascam.c tascam_eq.c tascam_eq_stereo.c tascam_comp.c tascam_alsa.c',
               name         = 'tascam',
               target       = '%s/tascam' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,

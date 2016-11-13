@@ -14,8 +14,8 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef TASCAM_EQ_H
-#define TASCAM_EQ_H
+#ifndef TASCAM_EQ_STEREO_H
+#define TASCAM_EQ_STEREO_H
 
 #include <math.h>
 #include <stdlib.h>
@@ -24,26 +24,29 @@
 #include "tascam_alsa.h"
 
 
-#define TASCAM_EQ_URI "http://www.paraair.de/plugins/tascam_eq"
+#define TASCAM_EQ_STEREO_URI "http://www.paraair.de/plugins/tascam_eq_stereo"
 
 
 typedef enum {
-    TASCAM_EQ_ENABLE,
-    TASCAM_EQ_HIGH_FREQ,
-    TASCAM_EQ_HIGH_LEVEL,
-    TASCAM_EQ_MIDHIGH_FREQ,
-    TASCAM_EQ_MIDHIGH_Q,
-    TASCAM_EQ_MIDHIGH_LEVEL,
-    TASCAM_EQ_MIDLOW_FREQ,
-    TASCAM_EQ_MIDLOW_Q,
-    TASCAM_EQ_MIDLOW_LEVEL,
-    TASCAM_EQ_LOW_FREQ,
-    TASCAM_EQ_LOW_LEVEL,
-    TASCAM_EQ_CHANNEL,
-    TASCAM_EQ_INPUT_LEVEL,
-    TASCAM_EQ_INPUT,
-    TASCAM_EQ_OUTPUT
-} PortIndex_eq;
+    TASCAM_EQ_STEREO_ENABLE,
+    TASCAM_EQ_STEREO_HIGH_FREQ,
+    TASCAM_EQ_STEREO_HIGH_LEVEL,
+    TASCAM_EQ_STEREO_MIDHIGH_FREQ,
+    TASCAM_EQ_STEREO_MIDHIGH_Q,
+    TASCAM_EQ_STEREO_MIDHIGH_LEVEL,
+    TASCAM_EQ_STEREO_MIDLOW_FREQ,
+    TASCAM_EQ_STEREO_MIDLOW_Q,
+    TASCAM_EQ_STEREO_MIDLOW_LEVEL,
+    TASCAM_EQ_STEREO_LOW_FREQ,
+    TASCAM_EQ_STEREO_LOW_LEVEL,
+    TASCAM_EQ_STEREO_CHANNEL,
+    TASCAM_EQ_STEREO_INPUT_LEVEL_LEFT,
+    TASCAM_EQ_STEREO_INPUT_LEVEL_RIGHT,
+    TASCAM_EQ_STEREO_INPUT_LEFT,
+    TASCAM_EQ_STEREO_INPUT_RIGHT,
+    TASCAM_EQ_STEREO_OUTPUT_LEFT,
+    TASCAM_EQ_STEREO_OUTPUT_RIGHT
+} PortIndex_eq_stereo;
 
 typedef struct {
     // Port buffers
@@ -59,35 +62,38 @@ typedef struct {
     const float* lowfreq;
     const float* lowlevel;
     const float* enable;
-    float* input_level;
-    const float* input;
-    float* output;
-    channel_cache* cache;
-} Tascam_eq_ports;
+    float* input_level_left;
+    float* input_level_right;
+    const float* input_left;
+    const float* input_right;
+    float* output_left;
+    float* output_right;
 
-extern LV2_Handle 
-instantiate_eq(const LV2_Descriptor*     descriptor,
+} Tascam_eq_stereo_ports;
+
+static LV2_Handle 
+instantiate_eq_stereo(const LV2_Descriptor*     descriptor,
             double                    rate,
             const char*               bundle_path,
             const LV2_Feature* const* features);
 
-extern void
-connect_port_eq(LV2_Handle instance,
+static void
+connect_port_eq_stereo(LV2_Handle instance,
              uint32_t   port,
              void*      data);
 
-extern void
-activate_eq(LV2_Handle instance);
+static void
+activate_eq_stereo(LV2_Handle instance);
 
-extern void
-run_eq(LV2_Handle instance, uint32_t n_samples);
+static void
+run_eq_stereo(LV2_Handle instance, uint32_t n_samples);
 
-extern void
-deactivate_eq(LV2_Handle instance);
+static void
+deactivate_eq_stereo(LV2_Handle instance);
 
-extern void
-cleanup_eq(LV2_Handle instance);
+static void
+cleanup_eq_stereo(LV2_Handle instance);
 
-extern LV2_Descriptor descriptor_eq;
+extern LV2_Descriptor descriptor_eq_stereo;
 
 #endif

@@ -20,14 +20,14 @@
 
 #define NUM_CHANNELS 16
 
-#include "tascam_alsa.h"
 #include "tascam_eq.h"
 #include "tascam_comp.h"
 #include "tascam_alsa.h"
 
 
-extern const void*
-extension_data(const char* uri);
+extern const void* extension_data(const char* uri);
+
+void free_reset(char** s);
 
 #endif /* TASCAM_H */
 

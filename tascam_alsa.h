@@ -20,25 +20,40 @@
 
 #include <alsa/asoundlib.h>
 
-#define __USE_MISC
-
 #include <pthread.h>
 #include <unistd.h>
 #include <mqueue.h>
 
-extern int cardnum;
+
+typedef struct {
+    int last_value;
+    int new_value;
+    char* name;
+    snd_hctl_elem_t* elem;
+    
+} control_cache;
+
+typedef struct {
+    int channel;
+    int num_controls;
+    control_cache controls[12];
+    
+} channel_cache;
+
 
 int get_alsa_cardnum();
 int open_device();
 void close_device();
 
+channel_cache* get_eq_channel_cache(int channel_index);
 
 //void setInteger(const char* name, int channel, int value);
 //int getInteger(const char* name);
 
-snd_hctl_elem_t* get_ctrl_elem(const char* name, int index);
+snd_hctl_elem_t* get_ctrl_elem(const char* name);
+void get_ctrl_elem_name(const char* name, int index, char* result[], size_t size);
 int setElemInteger(snd_hctl_elem_t *elem, int value);
-
+void setInteger(snd_hctl_t *hctl, const char* name, int value);
 int getIntegers(snd_hctl_elem_t *elem, int vals[], int count);
 
 float getMeterFloat(int index);

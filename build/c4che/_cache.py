@@ -9,7 +9,7 @@ CC_NAME = 'gcc'
 CC_SRC_F = []
 CC_TGT_F = ['-c', '-o']
 CC_VERSION = ('5', '4', '0')
-CFLAGS = ['-I/home/onkel/Projects/tascam.lv2', '-O0', '-g', '-fshow-column', '-std=c99']
+CFLAGS = ['-I/home/onkel/Projects/tascam.lv2', '-O0', '-g', '-fshow-column']
 CFLAGS_MACBUNDLE = ['-fPIC']
 CFLAGS_cshlib = ['-fPIC']
 CHECKED_ASOUND = 2

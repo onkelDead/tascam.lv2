@@ -21,6 +21,7 @@
 
 #include "tascam.h"
 #include "tascam_eq.h"
+#include "tascam_eq_stereo.h"
 #include "tascam_comp.h"
 
 LV2_SYMBOL_EXPORT
@@ -31,6 +32,8 @@ lv2_descriptor(uint32_t index)
 	case 0:  
 		return &descriptor_eq;
 	case 1:  
+		return &descriptor_eq_stereo;
+	case 2:  
 		return &descriptor_comp;
 	default: 
 		return NULL;
@@ -41,5 +44,12 @@ const void*
 extension_data(const char* uri)
 {
 	return NULL;
+}
+
+
+void free_reset(char** s) {
+    if( *s )
+        free(*s);
+    *s = 0;
 }
 

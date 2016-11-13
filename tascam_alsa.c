@@ -19,28 +19,49 @@
 #include <errno.h>
 #include <pthread.h>
 
-#include <unistd.h>
 
 #include "tascam_alsa.h"
+#include "tascam.h"
 
-int found = 0;
-int cardnum = -1;
+static int found = 0;
+static int cardnum = -1;
 
-snd_hctl_t *hctl = 0;
-int ref_counter = 0;
+static snd_hctl_t *hctl = 0;
+static int ref_counter = 0;
 
-snd_ctl_elem_value_t *control_int = 0;
+static snd_ctl_elem_value_t *control_int = 0;
 
-pthread_t thread;
+static pthread_t thread;
 
-int b_shutdown = 1;
+static int b_shutdown = 1;
 
-int meters[19];
+const char* eq_control_path[] = { 
+    "name='9 EQ',index=",
+    "name='81 HighFreq',index=",
+    "name='8 High',index=",
+    "name='71 MHiFreq',index=",
+    "name='72 MHiWidth',index=",
+    "name='7 MHigh',index=",
+    "name='61 MLowFreq',index=",
+    "name='62 MLowWidth',index=",
+    "name='6 MLow',index=",
+    "name='51 LowFreq',index=",
+    "name='5 Low',index=",
+    NULL
+};
+
+static channel_cache *eq_cache[16];
+
+static int meters[19] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 void* doSomeThing(void *arg) {
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_id_alloca(&id);
-    snd_hctl_elem_t *elem;
+    static snd_hctl_elem_t *elem;
+    
+    int i = 0;
+    int j = 0;
+        
     
     int err = snd_ctl_ascii_elem_id_parse(id, "name='Z Meter'");
     if (err) {
@@ -51,9 +72,25 @@ void* doSomeThing(void *arg) {
     elem = snd_hctl_find_elem(hctl, id);    
     
     do {
-//        fprintf(stdout, "doSomeThing\n");
+        
         usleep(10000);
-        getIntegers(elem, meters, 19 );
+        
+        getIntegers(elem, meters, 16 );
+        
+        for(int i = 0; i < NUM_CHANNELS; i++ ) {
+            for( j = 0; j < eq_cache[i]->num_controls; j++ ) {
+                int new_value = eq_cache[i]->controls[j].new_value;
+                int old_value =   eq_cache[i]->controls[j].last_value;
+                if(new_value != old_value) {
+                    fprintf(stderr, "tascam.lv2:do_something(): change %s %d\n", eq_cache[i]->controls[j].name, new_value);
+//                    setElemInteger(eq_cache[i]->controls[j].elem, eq_cache[i]->controls[j].new_value);
+                    setInteger(hctl, eq_cache[i]->controls[j].name, new_value);
+                    eq_cache[i]->controls[j].last_value = new_value;
+                    continue;
+                }
+            }
+        }
+        
     } while (!b_shutdown);
     return 0;
 }
@@ -121,10 +158,19 @@ next_card:
 
 int open_device() {
     int err = 0;
+    int i = 0, j;
     char name[32];
-    fprintf(stdout, "tascam.lv2: open_device\n");
+    
+    fprintf(stdout, "tascam.lv2: open_device()\n");
+    
     if( ref_counter == 0 ) {
     
+        if (cardnum == -1) {
+            cardnum = get_alsa_cardnum();
+            if (cardnum == -1)
+                return -1;
+        }        
+        
         sprintf(name, "hw:%d", cardnum);
         if ((err = snd_hctl_open(&hctl, name, 0)) < 0) {
             fprintf(stderr, "Control %s open error: %s\n", name, snd_strerror(err));
@@ -133,6 +179,20 @@ int open_device() {
         if ((err = snd_hctl_load(hctl)) < 0) {
             fprintf(stderr, "Control %s load error: %s\n", name, snd_strerror(err));
             return -1;
+        }
+        
+        for(j = 0; j < NUM_CHANNELS; j++ ) {
+            eq_cache[j] = calloc(1, sizeof(channel_cache));
+            eq_cache[j]->channel = j;
+            i = 0;
+            while(eq_control_path[i]) {
+                eq_cache[j]->controls[i].name = (char*)malloc(32);
+                get_ctrl_elem_name(eq_control_path[i], j,&(eq_cache[j]->controls[i].name), 32 );
+                eq_cache[j]->controls[i].elem = get_ctrl_elem(eq_cache[j]->controls[i].name);
+                eq_cache[j]->controls[i].last_value = eq_cache[j]->controls[i].new_value = -1;
+                i++;
+            }
+            eq_cache[j]->num_controls = i;
         }
         
         snd_ctl_elem_value_alloca(&control_int);        
@@ -150,14 +210,14 @@ int open_device() {
     return 0;
 }
 
+channel_cache* get_eq_channel_cache(int channel_index) {
+    return eq_cache[channel_index];
+}
+
 void close_device() {
+    int i=0,j;
     if( --ref_counter == 0) {
         fprintf(stdout, "tascam_lv2: close_device\n");
-//
-//        if( control_int ) {
-//            snd_ctl_elem_value_free(control_int);
-//            control_int = 0;
-//        }
         
         b_shutdown = 1;
         pthread_join(thread, NULL);
@@ -166,34 +226,57 @@ void close_device() {
             snd_hctl_close(hctl);
             hctl = 0;
         }
-        
-        
-        
     }
 }
 
-snd_hctl_elem_t* get_ctrl_elem(const char* name, int index) {
+snd_hctl_elem_t* get_ctrl_elem(const char* name) {
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_id_alloca(&id);
     snd_hctl_elem_t *elem;    
-    char num[32];
-    
-    sprintf(num, "%s%d", name, index);
 
-    int err = snd_ctl_ascii_elem_id_parse(id, num);
+    int err = snd_ctl_ascii_elem_id_parse(id, name);
     elem = snd_hctl_find_elem(hctl, id);
     return elem;
 }
+
+void get_ctrl_elem_name(const char* name,  int index, char* result[], size_t size) {
+    snd_ctl_elem_id_t *id;
+    snd_ctl_elem_id_alloca(&id);
+    snd_hctl_elem_t *elem;    
+    
+    snprintf(*result, size, "%s%d", name, index);
+    return;
+}
+
 
 int setElemInteger(snd_hctl_elem_t *elem, int value) {
     int err;
 
     snd_ctl_elem_value_set_integer(control_int, 0, value);
     if ((err = snd_hctl_elem_write(elem, control_int)) < 0) {
-        fprintf(stderr, "Control %s element read error: %s\n", "hw:0", snd_strerror(err));
+        fprintf(stderr, "Control %s element write error: %s\n", "hw:0", snd_strerror(err));
         return -1;
     }
     return 0;
+}
+
+void setInteger(snd_hctl_t *hctl, const char* name, int value) {
+    snd_ctl_elem_id_t *id;
+    snd_ctl_elem_id_alloca(&id);
+        snd_hctl_elem_t *elem;
+
+    int err = snd_ctl_ascii_elem_id_parse(id, name);
+    elem = snd_hctl_find_elem(hctl, id);
+    if (elem) {
+        fflush(stdout);
+        snd_ctl_elem_value_t *control;
+        snd_ctl_elem_value_alloca(&control);
+        snd_ctl_elem_value_set_integer(control, 0, value);
+        if ((err = snd_hctl_elem_write(elem, control)) < 0) {
+            fprintf(stderr, "Control %s element read error: %s\n", "hw:0", snd_strerror(err));
+            return;
+        }
+    }
 }
 
 int getIntegers(snd_hctl_elem_t *elem, int vals[], int count) {
@@ -215,49 +298,3 @@ float getMeterFloat(int index) {
     return ((float)meters[index]) / 0x7fff;
 }
 
-
-#if 0
-void setInteger(const char* name, int channel, int value) {
-    snd_ctl_elem_id_t *id;
-    snd_ctl_elem_id_alloca(&id);
-    snd_hctl_elem_t *elem;    
-
-    int err = snd_ctl_ascii_elem_id_parse(id, name);
-    elem = snd_hctl_find_elem(hctl, id);
-    if (elem) {
-        snd_ctl_elem_value_t *control_int;
-        snd_ctl_elem_value_alloca(&control_int);
-        snd_ctl_elem_value_set_integer(control_int, 0, value);
-        if ((err = snd_hctl_elem_write(elem, control_int)) < 0) {
-            fprintf(stderr, "Control %s element read error: %s\n", "hw:0", snd_strerror(err));
-            return;
-        }
-    }
-}
-
-int getInteger(const char* name) {
-    int val = 0;
-    snd_ctl_elem_id_t *id;
-    snd_ctl_elem_id_alloca(&id);
-    snd_hctl_elem_t *elem;  
-    
-    int err = snd_ctl_ascii_elem_id_parse(id, name);
-    if (err) {
-        fprintf(stderr, "Wrong control identifier: %s (%d)\n", name, err);
-        return -1;
-    }
-    elem = snd_hctl_find_elem(hctl, id);
-    if (elem) {
-        snd_ctl_elem_value_t *control_int;
-        snd_ctl_elem_value_alloca(&control_int);
-        if ((err = snd_hctl_elem_read(elem, control_int)) < 0) {
-            fprintf(stderr, "Control %s element read error: %s\n", "hw:0", snd_strerror(err));
-            return -5;
-        }
-        val = snd_ctl_elem_value_get_integer(control_int, 0);
-
-    }
-    return val;
-
-}    
-#endif

@@ -6,6 +6,8 @@
       <in>tascam_alsa.c</in>
       <in>tascam_comp.c</in>
       <in>tascam_eq.c</in>
+      <in>tascam_eq_stereo.c</in>
+      <in>tascam_eq_stereo.h</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -14,6 +16,7 @@
       <itemPath>Makefile</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
     </logicalFolder>
+    <itemPath>tascam_eq_stereo.ttl</itemPath>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
@@ -71,6 +74,12 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="tascam_eq_stereo.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tascam_eq_stereo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tascam_eq_stereo.ttl" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Debug" type="0">
       <toolsSet>
@@ -121,6 +130,12 @@
       <item path="tascam_eq.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
+      </item>
+      <item path="tascam_eq_stereo.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tascam_eq_stereo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tascam_eq_stereo.ttl" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
