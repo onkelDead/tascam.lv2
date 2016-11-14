@@ -22,8 +22,6 @@
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-static channel_cache* cache_left;
-static channel_cache* cache_right;
 
 const LV2_Descriptor descriptor_comp_stereo = {
     TASCAM_COMP_STEREO_URI,
@@ -135,8 +133,8 @@ run_comp_stereo(LV2_Handle instance, uint32_t n_samples) {
         *comp_left = getCompMeterFloat(_channel);
         *comp_right = getCompMeterFloat(_channel + 1);
         
-        cache_left = get_comp_channel_cache(_channel);
-        cache_right = get_comp_channel_cache(_channel + 1);
+        channel_cache* cache_left = get_comp_channel_cache(_channel);
+        channel_cache* cache_right = get_comp_channel_cache(_channel + 1);
 
         if (_enable != cache_left->controls[TASCAM_COMP_STEREO_ENABLE].new_value) {
             fprintf(stdout, "_enable changed to %d\n", _enable);
@@ -162,7 +160,7 @@ run_comp_stereo(LV2_Handle instance, uint32_t n_samples) {
             cache_right->controls[TASCAM_COMP_STEREO_ATTACK].new_value = _attack - 2;
         }
 
-        if ((_release != (cache_left->controls[TASCAM_COMP_STEREO_RELEASE].new_value ) * 10)) {
+        if (( (_release / 10) != (cache_left->controls[TASCAM_COMP_STEREO_RELEASE].new_value ) )) {
             fprintf(stdout, "_release changed\n");
             cache_left->controls[TASCAM_COMP_STEREO_RELEASE].new_value = _release / 10;
             cache_right->controls[TASCAM_COMP_STEREO_RELEASE].new_value = _release / 10;
