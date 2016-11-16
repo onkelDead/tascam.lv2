@@ -14,21 +14,17 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 /** Include standard C headers */
 #include <math.h>
 #include <stdlib.h>
 #include "tascam.h"
 #include "tascam_eq.h"
 
-
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#define TASCAM_URI "http://www.paraair.de/plugins/tascam_eq"
 
-int channel = 0;
 
-LV2_Descriptor descriptor_eq = {
+const LV2_Descriptor descriptor_eq = {
     TASCAM_EQ_URI,
     instantiate_eq,
     connect_port_eq,
@@ -40,18 +36,17 @@ LV2_Descriptor descriptor_eq = {
 };
 
 extern LV2_Handle
-instantiate_eq(const LV2_Descriptor* descriptor, double rate, const char* bundle_path, const LV2_Feature * const* features) {
+instantiate_eq(const LV2_Descriptor* descriptor, 
+        double rate, 
+        const char* bundle_path, 
+        const LV2_Feature * const* features) {
     
-    int i;
-
-    fprintf(stdout, "tascam.lv2: instantiate_eq bundle:%s\n", bundle_path);
+//    fprintf(stdout, "tascam.lv2: instantiate_eq bundle:%s\n", bundle_path);
     Tascam_eq_ports* instance = (Tascam_eq_ports*) calloc(1, sizeof (Tascam_eq_ports));
     
     if( open_device() )
         return NULL;
 
-    instance->cache = get_eq_channel_cache(channel);
-    
     return (LV2_Handle) instance;
 }
 
@@ -64,14 +59,6 @@ connect_port_eq(LV2_Handle instance,
     switch ((PortIndex_eq) port) {
         case TASCAM_EQ_CHANNEL:
             tascam->channel = (const float*) data;
-            break;
-
-        case TASCAM_EQ_INPUT:
-            tascam->input = (const float*) data;
-            break;
-
-        case TASCAM_EQ_OUTPUT:
-            tascam->output = (float*) data;
             break;
 
         case TASCAM_EQ_HIGH_FREQ:
@@ -128,36 +115,13 @@ connect_port_eq(LV2_Handle instance,
 extern void
 activate_eq(LV2_Handle instance) {
     
-    
-    
-//    int i;
-//    tascam_eq_cache* cache = ((Tascam_eq_ports*) instance)->cache;
-//    
-//    for(i=0; i < NUM_CHANNELS; i++) {
-//        cache->highfreq_elem[i] = get_ctrl_elem(cache->highfreq_name, i);
-//        cache->highlevel_elem[i] = get_ctrl_elem(cache->highlevel_name, i);
-//        cache->midhighfreq_elem[i] = get_ctrl_elem(cache->midhighfreq_name, i);
-//        cache->midhighq_elem[i] = get_ctrl_elem(cache->midhighq_name, i);
-//        cache->midhighlevel_elem[i] = get_ctrl_elem(cache->midhighlevel_name, i);
-//        cache->midlowfreq_elem[i] = get_ctrl_elem(cache->midlowfreq_name, i);
-//        cache->midlowq_elem[i] = get_ctrl_elem(cache->midlowq_name, i);
-//        cache->midlowlevel_elem[i] = get_ctrl_elem(cache->midlowlevel_name, i);
-//        cache->lowfreq_elem[i] = get_ctrl_elem(cache->lowfreq_name, i);
-//        cache->lowlevel_elem[i] = get_ctrl_elem(cache->lowlevel_name, i);
-//        cache->enable_elem[i] = get_ctrl_elem(cache->enable_name, i);
-//
-//    }
 }
-
-/** Define a macro for converting a gain in dB to a coefficient. */
-#define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g) * 0.05f) : 0.0f)
 
 extern void
 run_eq(LV2_Handle instance, uint32_t n_samples) {
-    const Tascam_eq_ports* tascam = (const Tascam_eq_ports*) instance;
-    channel_cache* cache;
     
-    int bChannelChanged = 0;
+    const Tascam_eq_ports* tascam = (const Tascam_eq_ports*) instance;
+    
     const int _channel = (int) *(tascam->channel);
     const int _highlevel = (int) *(tascam->highlevel);
     const int _highfreq = (int) *(tascam->highfreq);
@@ -170,90 +134,93 @@ run_eq(LV2_Handle instance, uint32_t n_samples) {
     const int _lowlevel = (int) *(tascam->lowlevel);
     const int _lowfreq = (int) *(tascam->lowfreq);
     const int _enable = (int) *(tascam->enable);
+
     float* meter = tascam->input_level;
-    const float* const input = tascam->input;
-    float* const output = tascam->output;
     
-    
-    
-    if(_channel != cache->channel) {
-//        fprintf(stdout, "_channle changed\n" );
-//        cache->channel = _channel;
-        channel = _channel;
-        bChannelChanged = 1;
-    }
+
     if(_channel != -1 ) {
     
-        cache = get_eq_channel_cache(_channel);
-        *meter = getMeterFloat(_channel);
+        *meter = getInputMeterFloat(_channel);
+        channel_cache* cache = get_eq_channel_cache(_channel);
         
         if( _enable != cache->controls[TASCAM_EQ_ENABLE].new_value ) {
-            fprintf(stdout, "_enable changed to %d\n", _enable );
+//            fprintf(stdout, "_enable (%p) %d to %d\n", (void*)cache, _channel, _enable );
             cache->controls[TASCAM_EQ_ENABLE].new_value = _enable;
+            return;
         }
         
         if ((_highlevel != cache->controls[TASCAM_EQ_HIGH_LEVEL].new_value - 12 ) ) {
-            fprintf(stdout, "_highlevel changed\n" );
+//            fprintf(stdout, "_highlevel changed\n" );
             cache->controls[TASCAM_EQ_HIGH_LEVEL].new_value = _highlevel + 12;
+            return;
         }
 
         if ((_highfreq != cache->controls[TASCAM_EQ_HIGH_FREQ].new_value )  ) {
-            fprintf(stdout, "_highfreq changed\n" );
+//            fprintf(stdout, "_highfreq changed\n" );
             cache->controls[TASCAM_EQ_HIGH_FREQ].new_value = _highfreq;
+            return;
         }
 
         if ((_midhighfreq != cache->controls[TASCAM_EQ_MIDHIGH_FREQ].new_value )  ) {
-            fprintf(stdout, "_midhighfreq changed\n" );
+//            fprintf(stdout, "_midhighfreq changed\n" );
             cache->controls[TASCAM_EQ_MIDHIGH_FREQ].new_value = _midhighfreq;
+            return;
         }
 
         if ((_midhighq != cache->controls[TASCAM_EQ_MIDHIGH_Q].new_value ) /* || bChannelChanged */  ) {
-            fprintf(stdout, "_midhighq changed\n" );
+//            fprintf(stdout, "_midhighq changed\n" );
             cache->controls[TASCAM_EQ_MIDHIGH_Q].new_value = _midhighq;
+            return;
         }
 
         if ((_midhighlevel != cache->controls[TASCAM_EQ_MIDHIGH_LEVEL].new_value -12 ) /* || bChannelChanged */  ) {
-            fprintf(stdout, "_midhighlevel(%d) changed to %d\n", _channel, _midhighlevel );
+//            fprintf(stdout, "_midhighlevel(%d) changed to %d\n", _channel, _midhighlevel );
             cache->controls[TASCAM_EQ_MIDHIGH_LEVEL].new_value = _midhighlevel + 12;
+            return;
         }
 
         if ((_midlowfreq != cache->controls[TASCAM_EQ_MIDLOW_FREQ].new_value ) /* || bChannelChanged */  ) {
-            fprintf(stdout, "_midlowfreq changed\n" );
+//            fprintf(stdout, "_midlowfreq changed\n" );
             cache->controls[TASCAM_EQ_MIDLOW_FREQ].new_value = _midlowfreq;
+            return;
         }
 
         if ((_midlowq != cache->controls[TASCAM_EQ_MIDLOW_Q].new_value ) /* || bChannelChanged */  ) {
-            fprintf(stdout, "_midlowq changed\n" );
+//            fprintf(stdout, "_midlowq changed\n" );
             cache->controls[TASCAM_EQ_MIDLOW_Q].new_value = _midlowq;
+            return;
         }
 
         if ((_midlowlevel != cache->controls[TASCAM_EQ_MIDLOW_LEVEL].new_value -12 ) /* || bChannelChanged */  ) {
-            fprintf(stdout, "_midlowlevel changed\n" );
+//            fprintf(stdout, "_midlowlevel changed\n" );
             cache->controls[TASCAM_EQ_MIDLOW_LEVEL].new_value = _midlowlevel + 12;
+            return;
         }
 
         if ((_lowlevel != cache->controls[TASCAM_EQ_LOW_LEVEL].new_value -12) /* || bChannelChanged */  ) {
-            fprintf(stdout, "_lowlevel(%d) changed %d\n", _channel, _lowlevel );
+//            fprintf(stdout, "_lowlevel(%d) changed %d\n", _channel, _lowlevel );
             cache->controls[TASCAM_EQ_LOW_LEVEL].new_value = _lowlevel + 12;
+            return;
         }
 
         if ((_lowfreq != cache->controls[TASCAM_EQ_LOW_FREQ].new_value ) /* || bChannelChanged */  ) {
-            fprintf(stdout, "_lowfreq changed\n" );
+//            fprintf(stdout, "_lowfreq changed\n" );
             cache->controls[TASCAM_EQ_LOW_FREQ].new_value = _lowfreq;
+            return;
         }
     }
 }
 
 extern void
 deactivate_eq(LV2_Handle instance) {
-    fprintf(stdout, "tascam_lv2: deactivate_eq\n");
+//    fprintf(stdout, "tascam_lv2: deactivate_eq\n");
 }
 
 extern void
 cleanup_eq(LV2_Handle instance) {
-    fprintf(stdout, "tascam_lv2: cleanup_eq\n");
+//    fprintf(stdout, "tascam_lv2: cleanup_eq\n");
 
-    free(instance);
+    free((Tascam_eq_ports*)instance);
     close_device();
 }
 

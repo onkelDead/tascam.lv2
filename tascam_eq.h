@@ -23,9 +23,7 @@
 
 #include "tascam_alsa.h"
 
-
 #define TASCAM_EQ_URI "http://www.paraair.de/plugins/tascam_eq"
-
 
 typedef enum {
     TASCAM_EQ_ENABLE,
@@ -41,8 +39,6 @@ typedef enum {
     TASCAM_EQ_LOW_LEVEL,
     TASCAM_EQ_CHANNEL,
     TASCAM_EQ_INPUT_LEVEL,
-    TASCAM_EQ_INPUT,
-    TASCAM_EQ_OUTPUT
 } PortIndex_eq;
 
 typedef struct {
@@ -60,9 +56,6 @@ typedef struct {
     const float* lowlevel;
     const float* enable;
     float* input_level;
-    const float* input;
-    float* output;
-    channel_cache* cache;
 } Tascam_eq_ports;
 
 extern LV2_Handle 
@@ -88,6 +81,6 @@ deactivate_eq(LV2_Handle instance);
 extern void
 cleanup_eq(LV2_Handle instance);
 
-extern LV2_Descriptor descriptor_eq;
+extern const LV2_Descriptor descriptor_eq;
 
 #endif

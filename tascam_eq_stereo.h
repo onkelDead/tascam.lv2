@@ -1,5 +1,5 @@
 /*
-  Copyright 2006-2016 Detlef Urban <onkel@paraair.de>
+  Copyright 2016 Detlef Urban <onkel@paraair.de>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -17,16 +17,14 @@
 #ifndef TASCAM_EQ_STEREO_H
 #define TASCAM_EQ_STEREO_H
 
-#include <math.h>
-#include <stdlib.h>
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include <lv2/lv2plug.in/ns/lv2core/lv2.h>
 
 #include "tascam_alsa.h"
 
-
+//* URI represents this LV2 plugin
 #define TASCAM_EQ_STEREO_URI "http://www.paraair.de/plugins/tascam_eq_stereo"
 
-
+//* Zero based enumeration of control ports
 typedef enum {
     TASCAM_EQ_STEREO_ENABLE,
     TASCAM_EQ_STEREO_HIGH_FREQ,
@@ -48,6 +46,7 @@ typedef enum {
     TASCAM_EQ_STEREO_OUTPUT_RIGHT
 } PortIndex_eq_stereo;
 
+//* structure to hold the port buffers
 typedef struct {
     // Port buffers
     const float* channel;
@@ -64,12 +63,8 @@ typedef struct {
     const float* enable;
     float* input_level_left;
     float* input_level_right;
-    const float* input_left;
-    const float* input_right;
-    float* output_left;
-    float* output_right;
-
 } Tascam_eq_stereo_ports;
+
 
 static LV2_Handle 
 instantiate_eq_stereo(const LV2_Descriptor*     descriptor,

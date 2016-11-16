@@ -96,7 +96,7 @@ connect_port_comp(LV2_Handle instance,
 
 extern void
 activate_comp(LV2_Handle instance) {
-    fprintf(stdout, "tascam_lv2: activate_comp\n");
+//    fprintf(stdout, "tascam_lv2: activate_comp\n");
 }
 
 extern void
@@ -122,32 +122,32 @@ run_comp(LV2_Handle instance, uint32_t n_samples) {
         channel_cache* cache = get_comp_channel_cache(_channel);
 
         if (_enable != cache->controls[TASCAM_COMP_ENABLE].new_value) {
-            fprintf(stdout, "_enable changed to %d\n", _enable);
+//            fprintf(stdout, "_enable changed to %d\n", _enable);
             cache->controls[TASCAM_COMP_ENABLE].new_value = _enable;
         }
 
         if ((_threshold != cache->controls[TASCAM_COMP_TRESHOLD].new_value - 32)) {
-            fprintf(stdout, "_threshold changed\n");
+//            fprintf(stdout, "_threshold changed\n");
             cache->controls[TASCAM_COMP_TRESHOLD].new_value = _threshold + 32;
         }
 
         if ((_ratio != cache->controls[TASCAM_COMP_RATIO].new_value)) {
-            fprintf(stdout, "_ratio changed\n");
+//            fprintf(stdout, "_ratio changed\n");
             cache->controls[TASCAM_COMP_RATIO].new_value = _ratio;
         }
 
         if ((_attack != cache->controls[TASCAM_COMP_ATTACK].new_value + 2)) {
-            fprintf(stdout, "_attack changed\n");
+//            fprintf(stdout, "_attack changed\n");
             cache->controls[TASCAM_COMP_ATTACK].new_value = _attack - 2;
         }
 
         if ((_release / 10 != (cache->controls[TASCAM_COMP_RELEASE].new_value ) )) {
-            fprintf(stdout, "_release changed\n");
+//            fprintf(stdout, "_release changed\n");
             cache->controls[TASCAM_COMP_RELEASE].new_value = _release / 10;
         }
 
         if ((_gain != cache->controls[TASCAM_COMP_GAIN].new_value)) {
-            fprintf(stdout, "_gain changed\n");
+//            fprintf(stdout, "_gain changed\n");
             cache->controls[TASCAM_COMP_GAIN].new_value = _gain;
         }
     }
@@ -155,12 +155,12 @@ run_comp(LV2_Handle instance, uint32_t n_samples) {
 
 extern void
 deactivate_comp(LV2_Handle instance) {
-    fprintf(stdout, "tascam_lv2: deactivate_comp\n");
+//    fprintf(stdout, "tascam_lv2: deactivate_comp\n");
 }
 
 extern void
 cleanup_comp(LV2_Handle instance) {
-    fprintf(stdout, "tascam_lv2: cleanup_comp\n");
+//    fprintf(stdout, "tascam_lv2: cleanup_comp\n");
 
     free((Tascam_comp_ports*) instance);
     close_device();
