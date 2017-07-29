@@ -1,0 +1,20 @@
+AC_INIT([tascam.lv2], [0.86], [onkel@paraair.de])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
+AC_PREREQ([2.66])
+AC_PROG_CXX
+
+AM_PROG_AR
+AC_PROG_LIBTOOL
+LT_INIT
+
+PKG_CHECK_MODULES([ALSA], [alsa])
+PKG_CHECK_MODULES([LV2], [lv2])
+
+AC_CHECK_HEADER_STDBOOL
+
+AC_TYPE_INT32_T
+AC_TYPE_SIZE_T
+
+AC_CONFIG_FILES([Makefile])
+
+AC_OUTPUT

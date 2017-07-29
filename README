@@ -1,7 +1,0 @@
-LV2 plugin to control Tascam US-16x08 interface via cutsom alsa driver.
-This plugin has no effect on any audio stream.
-
-The custom alsa driver needed can be found in another repo of OnkelDead.
-
-tbc....
-

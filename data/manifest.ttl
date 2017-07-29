@@ -25,22 +25,22 @@
 
 <http://www.paraair.de/plugins/tascam_eq>
 	a lv2:Plugin ;
-	lv2:binary <tascam@LIB_EXT@>  ;
+	lv2:binary <libtascam.so>  ;
 	rdfs:seeAlso <tascam_eq.ttl> .
 
 <http://www.paraair.de/plugins/tascam_eq_stereo>
 	a lv2:Plugin ;
-	lv2:binary <tascam@LIB_EXT@>  ;
+	lv2:binary <libtascam.so>  ;
 	rdfs:seeAlso <tascam_eq_stereo.ttl> .
 
 <http://www.paraair.de/plugins/tascam_comp>
 	a lv2:Plugin ;
-	lv2:binary <tascam@LIB_EXT@>  ;
+	lv2:binary <libtascam.so>  ;
 	rdfs:seeAlso <tascam_comp.ttl> .
 
 <http://www.paraair.de/plugins/tascam_comp_stereo>
 	a lv2:Plugin ;
-	lv2:binary <tascam@LIB_EXT@>  ;
+	lv2:binary <libtascam.so>  ;
 	rdfs:seeAlso <tascam_comp_stereo.ttl> .
 
 

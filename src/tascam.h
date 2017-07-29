@@ -18,6 +18,8 @@
 #ifndef TASCAM_H
 #define TASCAM_H
 
+#define DEVICE_NAME "US16x08"
+
 #define NUM_CHANNELS 16
 
 #include "tascam_eq.h"
