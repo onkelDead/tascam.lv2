@@ -4,7 +4,7 @@ LV2 plugin to control Tascam US-16x08 interface via cutsom alsa driver.
 This plugin has no effect on any audio stream.
 
 Precondition is a linux kernel version 4.12 or higher, or a kernel patch 
-which could be found at https://github.com/onkelDead/tascam-driver-path.
+which could be found at https://github.com/onkelDead/tascam-driver-patch.
 
 It consists of four separate plugins, which are:
 
