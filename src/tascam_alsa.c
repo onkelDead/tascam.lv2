@@ -48,15 +48,15 @@ static int b_shutdown = 1;
 //* EQ control element names.
 const char* eq_control_path[] = {
 	"name='EQ Switch',index=",
-	"name='EQ High Frequence',index=",
+	"name='EQ High Frequency',index=",
 	"name='EQ High Volume',index=",
-	"name='EQ MidHigh Frequence',index=",
+	"name='EQ MidHigh Frequency',index=",
 	"name='EQ MidHigh Q',index=",
 	"name='EQ MidHigh Volume',index=",
-	"name='EQ MidLow Frequence',index=",
+	"name='EQ MidLow Frequency',index=",
 	"name='EQ MidLow Q',index=",
 	"name='EQ MidLow Volume',index=",
-	"name='EQ Low Frequence',index=",
+	"name='EQ Low Frequency',index=",
 	"name='EQ Low Volume',index=",
 	NULL
 };
@@ -117,6 +117,7 @@ void* doSomeThing(void *arg)
 				int new_value = eq_cache[i]->controls[j].new_value;
 				int old_value = eq_cache[i]->controls[j].last_value;
 				if (new_value != old_value) {
+                                        //fprintf(stdout, "doSomeThing eq changed on ch:%d %s %d to %d\n", i, eq_cache[i]->controls[j].name, old_value, new_value );
 					setInteger(hctl, eq_cache[i]->controls[j].name, new_value);
 					eq_cache[i]->controls[j].last_value = new_value;
 					continue;
@@ -126,6 +127,7 @@ void* doSomeThing(void *arg)
 				int new_value = comp_cache[i]->controls[j].new_value;
 				int old_value = comp_cache[i]->controls[j].last_value;
 				if (new_value != old_value) {
+                                        //fprintf(stdout, "doSomeThing eq changed on ch:%d %s %d to %d\n", i, comp_cache[i]->controls[j].name, old_value, new_value );
 					setInteger(hctl, comp_cache[i]->controls[j].name, new_value);
 					comp_cache[i]->controls[j].last_value = new_value;
 					continue;
@@ -230,10 +232,12 @@ int open_device()
 			eq_cache[j]->channel = j;
 			i = 0;
 			while (eq_control_path[i]) {
-				name_size = strlen(eq_control_path[i] + 4);
+				name_size = strlen(eq_control_path[i]) + 6;
 				eq_cache[j]->controls[i].name = (char*) malloc(name_size);
 				get_ctrl_elem_name(eq_control_path[i], j, &(eq_cache[j]->controls[i].name), name_size);
-				eq_cache[j]->controls[i].last_value = eq_cache[j]->controls[i++].new_value = -1;
+                                int val = getInteger(hctl, eq_cache[j]->controls[i].name);
+				eq_cache[j]->controls[i].last_value = eq_cache[j]->controls[i].new_value = val;
+                                i++;
 			}
 			eq_cache[j]->num_controls = i;
 
@@ -241,10 +245,11 @@ int open_device()
 			comp_cache[j]->channel = j;
 			i = 0;
 			while (comp_control_path[i]) {
-				name_size = strlen(eq_control_path[i] + 4);
+				name_size = strlen(comp_control_path[i]) + 6;
 				comp_cache[j]->controls[i].name = (char*) malloc(name_size);
 				get_ctrl_elem_name(comp_control_path[i], j, &(comp_cache[j]->controls[i].name), name_size);
-				comp_cache[j]->controls[i].last_value = comp_cache[j]->controls[i++].new_value = -1;
+				comp_cache[j]->controls[i].last_value = comp_cache[j]->controls[i].new_value = -1;
+                                i++;
 			}
 			comp_cache[j]->num_controls = i;
 		}
@@ -326,6 +331,27 @@ int setElemInteger(snd_hctl_elem_t *elem, int value)
 		return -1;
 	}
 	return 0;
+}
+
+int getInteger(snd_hctl_t *hctl, const char* name) {
+	snd_ctl_elem_id_t *id;
+	snd_ctl_elem_id_alloca(&id);
+	snd_hctl_elem_t *elem;
+        int value;
+        
+	int err = snd_ctl_ascii_elem_id_parse(id, name);
+	elem = snd_hctl_find_elem(hctl, id);
+	if (elem) {
+		fflush(stdout);
+		snd_ctl_elem_value_t *control;
+		snd_ctl_elem_value_alloca(&control);
+		value = snd_ctl_elem_value_get_integer(control, 0);
+		if ((err = snd_hctl_elem_write(elem, control)) < 0) {
+			fprintf(stderr, "Control %s element read error: %s\n", name, snd_strerror(err));
+			return 0;
+		}
+	}    
+        return value;
 }
 
 void setInteger(snd_hctl_t *hctl, const char* name, int value)

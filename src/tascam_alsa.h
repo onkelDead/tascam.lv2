@@ -88,6 +88,9 @@ void get_ctrl_elem_name(const char* name, int index, char* result[], size_t size
  */
 void setInteger(snd_hctl_t *hctl, const char* name, int value);
 
+
+int getInteger(snd_hctl_t *hctl, const char* name);
+
 /**
  * Gets a n array of integer values from an alsa control element.
  * @param elem A pointer to a structure of type snd_hctl_elem_t, which identifies the alsa control.
